@@ -1,14 +1,12 @@
 from typing import AsyncIterator
 
-from sqlalchemy.ext.asyncio import (
-    AsyncSession,
-    async_sessionmaker,
-    create_async_engine,
-)
+import sqlalchemy as sa
+from sqlalchemy.ext.asyncio import (AsyncSession, async_sessionmaker,
+                                    create_async_engine)
 
+from backend.database.models import Result
 from backend.database.models.base import AlchemyBaseModel
 from backend.settings import Settings
-
 
 __factory: None | async_sessionmaker = None
 
@@ -29,6 +27,12 @@ async def database_init(settings: Settings) -> None:
 
     async with async_engine.begin() as conn:
         await conn.run_sync(AlchemyBaseModel.metadata.create_all)
+
+
+async def init_result(session: AsyncSession) -> None:
+    if not await session.scalar(sa.select(Result)):
+        session.add(Result())
+        await session.commit()
 
 
 async def get_session() -> AsyncIterator[AsyncSession]:

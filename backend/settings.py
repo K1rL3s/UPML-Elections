@@ -12,6 +12,6 @@ class Settings(BaseModel):
 def get_settings() -> Settings:
     load_dotenv()
     return Settings(
-        port=os.environ["BACKEND_PORT"],
+        port=int(os.environ["BACKEND_PORT"]),
         db_path=os.environ["db_path"],
     )

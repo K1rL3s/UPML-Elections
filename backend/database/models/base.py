@@ -23,7 +23,10 @@ class AlchemyBaseModel(DeclarativeBase):
     def __repr__(self) -> str:
         """Вывод информации о моделе в человекочитаемом виде."""
         return self._repr(
-            **{c.name: getattr(self, c.name) for c in self.__table__.columns}  # noqa
+            **{
+                c.name: getattr(self, c.name)
+                for c in self.__table__.columns  # type: ignore
+            }
         )
 
     def _repr(self, **fields: Any) -> str:

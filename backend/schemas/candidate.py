@@ -1,25 +1,34 @@
 from typing import Optional
 
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import Field
+
+from backend.schemas.base import BaseSchema
 
 
-class CandidateCreate(BaseModel):
-    model_config = ConfigDict(from_attributes=True)
-
-    id: Optional[int] = Field(default=None, gt=0)
-    name: str = Field(max_length=32)
-    surname: str = Field(max_length=32)
-    patronymic: str = Field(max_length=32)
-    image: str = Field(max_length=32)
+class CandidateCreate(BaseSchema):
+    name: Optional[str] = Field(default=None, max_length=32)
+    surname: Optional[str] = Field(default=None, max_length=32)
+    patronymic: Optional[str] = Field(default=None, max_length=32)
+    gender: Optional[bool] = Field(default=True)
+    image: Optional[str] = Field(default=None, max_length=32)
     votes: Optional[int] = Field(default=0)
 
 
-class CandidateUpdateSchema(BaseModel):
-    model_config = ConfigDict(from_attributes=True)
-
-    id: Optional[int] = Field(gt=0)
+class CandidateRead(BaseSchema):
+    id: int = Field(gt=0)
     name: Optional[str] = Field(max_length=32)
     surname: Optional[str] = Field(max_length=32)
     patronymic: Optional[str] = Field(max_length=32)
+    gender: Optional[bool] = Field(default=True)
     image: Optional[str] = Field(max_length=32)
-    votes: Optional[int]
+    votes: Optional[int] = Field(default=0)
+
+
+class CandidateUpdate(BaseSchema):
+    id: int = Field(gt=0)
+    name: Optional[str] = Field(default=None, max_length=32)
+    surname: Optional[str] = Field(default=None, max_length=32)
+    patronymic: Optional[str] = Field(default=None, max_length=32)
+    gender: Optional[bool]
+    image: Optional[str] = Field(default=None, max_length=32)
+    votes: Optional[int] = Field()

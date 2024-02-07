@@ -2,21 +2,39 @@ from contextlib import asynccontextmanager
 
 import uvicorn
 from fastapi import FastAPI
+from starlette.middleware.cors import CORSMiddleware
+from starlette.staticfiles import StaticFiles
 
+from backend.database import database_init, get_session, init_result
+from backend.routes import include_routers
 from backend.settings import get_settings
-from backend.database.db_session import database_init
-from backend.routes import candidates
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     settings = get_settings()
     await database_init(settings)
+
+    it = get_session()
+    session = await it.__anext__()
+    await init_result(session)
+
     yield
 
 
 app = FastAPI(lifespan=lifespan)
-app.include_router(candidates.router, tags=["Candidates"])
+app.mount("/images", StaticFiles(directory="backend/images"), name="images")
+include_routers(app)
+
+
+origins = ["*"]
+app.add_middleware(
+    CORSMiddleware,  # type: ignore
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 
 def main():
