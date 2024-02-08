@@ -2,21 +2,19 @@ version: "3.9"
 
 services:
   backend:
-    image: "upml-elections-image"
-    container_name: "upml-elections"
+    image: "upml-elections-backend-image"
+    container_name: "upml-elections-backend"
     build:
       context: .
       dockerfile: ./backend/Dockerfile
     ports:
       - "${BACKEND_PORT}:${BACKEND_PORT}"
-    restart: unless-stopped
+    volumes:
+      - "upml-elections-volume:/app/db"
     env_file: .env
     environment:
       PYTHONUNBUFFERED: 1
       PYTHONDONTWRITEBYTECODE: 1
-    links:
-      - database
-
 
 volumes:
-  upml-elections-database:
+  upml-elections-volume:

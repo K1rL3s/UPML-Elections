@@ -35,9 +35,17 @@ async def init_result(session: AsyncSession) -> None:
         await session.commit()
 
 
-async def get_session() -> AsyncIterator[AsyncSession]:
+async def get_session_yield() -> AsyncIterator[AsyncSession]:
     if not __factory:
         raise RuntimeError("Брат, а кто database_init вызывать будет?")
 
     async with __factory() as session:
         yield session
+
+
+async def get_session_return() -> AsyncSession:
+    if not __factory:
+        raise RuntimeError("Брат, а кто database_init вызывать будет?")
+    
+    async with __factory() as session:
+        return session

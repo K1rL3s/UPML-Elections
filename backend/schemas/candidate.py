@@ -31,4 +31,4 @@ class CandidateUpdate(BaseSchema):
     patronymic: Optional[str] = Field(default=None, max_length=32)
     gender: Optional[bool]
     image: Optional[str] = Field(default=None, max_length=32)
-    votes: Optional[int] = Field()
+    votes: Optional[int]

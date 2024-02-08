@@ -1,0 +1,40 @@
+// app global css in SCSS form
+* {
+  margin: 0;
+  padding: 0;
+}
+
+img {
+  display: block;
+}
+
+.limiter {
+  max-width: $limiter-max-width;
+  width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 20px;
+  padding-right: 20px;
+}
+
+a {
+  text-decoration: none;
+}
+h2 {
+  font-size: calc(40px + 0.2vw) !important;
+  font-weight: 400;
+}
+
+h4 {
+  font-size: 1.8vw !important;
+  font-weight: 500 !important;
+}
+h6 {
+  font-size: 1.7vw !important;
+}
+
+@media (max-width: 768px) {
+  h4 {
+    font-size: 30px !important;
+  }
+}
