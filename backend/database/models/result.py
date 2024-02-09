@@ -28,11 +28,6 @@ class Result(AlchemyBaseModel):
         default=None,
         nullable=True,
     )
-    winner_patronymic: Mapped[Optional[str]] = mapped_column(
-        String(32),
-        default=None,
-        nullable=True,
-    )
     winner_gender: Mapped[Optional[bool]] = mapped_column(
         String(32),
         default=None,

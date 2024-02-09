@@ -18,8 +18,11 @@ class Candidate(AlchemyBaseModel):
     )
     name: Mapped[Optional[str]] = mapped_column(String(32), nullable=True)
     surname: Mapped[Optional[str]] = mapped_column(String(32), nullable=True)
-    patronymic: Mapped[Optional[str]] = mapped_column(String(32), nullable=True)
-    gender: Mapped[Optional[bool]] = mapped_column(Boolean(), nullable=True)
+    gender: Mapped[Optional[bool]] = mapped_column(
+        Boolean(),
+        nullable=True,
+        default=True,
+    )
     image: Mapped[Optional[str]] = mapped_column(
         String(32),
         nullable=True,

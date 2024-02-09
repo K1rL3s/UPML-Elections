@@ -25,12 +25,6 @@
             :rules="[(val) => !!val || 'Поле обязательное']"
             @update:model-value="changeCandidateData(id)"
           />
-          <q-input
-            v-model="candidatesSettingsList[id].patronymic"
-            label="Отчество кандидата"
-            :rules="[(val) => !!val || 'Поле обязательное']"
-            @update:model-value="changeCandidateData(id)"
-          />
           <q-file
             v-model="candidatesSettingsList[id].image"
             accept=".jpg, .png, image/*"
@@ -153,11 +147,11 @@ export default {
         )
         .then((req) => {
           this.candidatesSettingsList.push({
+            id: req.data.id,
             name: "",
             surname: "",
-            patronymic: "",
             gender: "Мужской",
-            image: "",
+            image: req.data.image,
             votes: 0,
           });
         });
@@ -186,33 +180,35 @@ export default {
     deleteCandidate(id) {
       axios.delete(
         constants.serverIp + "candidates/" + this.candidatesSettingsList[id].id,
-        {},
         {
           headers: {
             "Session-Id": this.sessionId,
           },
         }
-      );
-      this.candidatesSettingsList.splice(id, 1);
+      )
+      .then((req) => {
+        this.candidatesSettingsList.splice(id, 1);
+      })
+      .catch((req) => {
+        console.log(123123);
+        console.log(req);
+      });
     },
     changeCandidateData(id) {
-      let jsonData = {};
-      jsonData["id"] = this.candidatesSettingsList[id].id;
-      jsonData["name"] = this.candidatesSettingsList[id].name;
-      jsonData["surname"] = this.candidatesSettingsList[id].surname;
-      jsonData["patronymic"] = this.candidatesSettingsList[id].patronymic;
-      jsonData["gender"] =
-        this.candidatesSettingsList[id].gender === "Мужской" ? 1 : 0;
-      if (
-        this.candidatesSettingsList[id].image &&
-        typeof this.candidatesSettingsList[id].image !== "string"
-      ) {
-        jsonData["image"] = this.candidatesSettingsList[id].image;
+      console.log(this.candidatesSettingsList);
+      let formData = new FormData();
+      formData.append("candidate_id", this.candidatesSettingsList[id].id);
+      if (this.candidatesSettingsList[id].name) formData.append("name", this.candidatesSettingsList[id].name);
+      if (this.candidatesSettingsList[id].surname) formData.append("surname", this.candidatesSettingsList[id].surname);
+      if (this.candidatesSettingsList[id].gender) formData.append("gender", this.candidatesSettingsList[id].gender === "Мужской" ? 1 : 0);
+      if (this.candidatesSettingsList[id].image && typeof this.candidatesSettingsList[id].image !== "string") {
+        formData.append("image", this.candidatesSettingsList[id].image);
       }
-      jsonData["votes"] = this.candidatesSettingsList[id].votes;
+      if (this.candidatesSettingsList[id].votes) formData.append("votes", this.candidatesSettingsList[id].votes);
       axios
-        .put(constants.serverIp + "candidates/", jsonData, {
+        .put(constants.serverIp + "candidates/", formData, {
           headers: {
+            "Session-Id": this.sessionId,
             "Content-Type": "application/json",
           },
         })

@@ -35,9 +35,12 @@ async def login(
 
 async def is_auth_user(request: Request) -> None:
     session = await get_session_return()
-    session_id = request.headers.get("Session-Id")
-    auth_token = await session.scalar(
-        sa.select(AuthToken).where(AuthToken.token == session_id)
-    )
-    if auth_token is None:
-        raise HTTPException(status_code=401, detail="Who are you?..")
+    try:
+        session_id = request.headers.get("Session-Id")
+        auth_token = await session.scalar(
+            sa.select(AuthToken).where(AuthToken.token == session_id)
+        )
+        if auth_token is None:
+            raise HTTPException(status_code=401, detail="Who are you?..")
+    finally:
+        await session.close()

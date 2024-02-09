@@ -9,7 +9,7 @@
         }"
       >
         <Logo :style="{ 'font-size': role === 2 ? '2.5vw' : '' }">
-          Выборы президента сената ЮФМЛ
+          Выборы президента ЮФМЛ
         </Logo>
         <HeaderNavigation v-if="role !== 2" />
       </div>
@@ -88,7 +88,6 @@ export default {
     axios.get(constants.serverIp + "end/").then((req) => {
       this.winnerName = req.data.winner_name;
       this.winnerSurname = req.data.winner_surname;
-      this.winnerPatronymic = req.data.winner_patronymic;
       this.winnerGender = req.data.winner_gender;
     });
   },

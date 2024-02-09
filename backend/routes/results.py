@@ -32,14 +32,22 @@ async def end_toggle(
 
         result.winner_name = candidate.name
         result.winner_surname = candidate.surname
-        result.winner_patronymic = candidate.patronymic
         result.winner_gender = candidate.gender
     else:
         result.winner_name = None
         result.winner_surname = None
-        result.winner_patronymic = None
         result.winner_gender = None
 
     await session.commit()
 
     return ResultRead.model_validate(result, from_attributes=True)
+
+
+@router.get("/percentage/", status_code=status.HTTP_200_OK)
+async def percentage(
+    session: AsyncSession = Depends(get_session_yield),
+) -> list[tuple[int, float]]:
+    query = sa.select(Candidate).order_by(Candidate.id)
+    candidates = list(await session.scalars(query))
+    all_votes = sum(c.votes for c in candidates)
+    return [(c.id, c.votes / all_votes * 100) for c in candidates] if all_votes else {}

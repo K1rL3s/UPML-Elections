@@ -48,23 +48,6 @@ export default {
       serverIp: constants.serverIp,
     };
   },
-  methods: {
-    ...mapMutations("mainStore", ["mutateVote"]),
-    vote() {
-      axios
-        .post(constants.serverIp + "vote/", {
-          session_id: this.sessionId,
-          candidate_id: this.candidate.candidateId,
-        })
-        .then((req) => {
-          console.log(req);
-        })
-        .catch((req) => {
-          console.log(req);
-        });
-      this.mutateVote();
-    },
-  },
   computed: {
     ...mapGetters("mainStore", ["sessionId", "isVoted", "role"]),
   },

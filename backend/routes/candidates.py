@@ -1,13 +1,15 @@
+from typing import List, Optional
+
 import sqlalchemy as sa
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, Form, HTTPException, UploadFile
 from sqlalchemy.ext.asyncio import AsyncSession
 from starlette import status
 
 from backend.database.db_session import get_session_yield
 from backend.database.models import Candidate
-from backend.schemas.candidate import (CandidateCreate, CandidateRead,
-                                       CandidateUpdate)
+from backend.schemas.candidate import CandidateCreate, CandidateRead
 from backend.routes.auth import is_auth_user
+from backend.utils.image import save_image
 
 
 router = APIRouter(tags=["Candidates"])
@@ -17,7 +19,7 @@ router = APIRouter(tags=["Candidates"])
 async def candidates_get_all(
     session: AsyncSession = Depends(get_session_yield),
 ) -> list[CandidateRead]:
-    query = sa.select(Candidate)
+    query = sa.select(Candidate).order_by(Candidate.id)
     candidates = await session.scalars(query)
 
     return [
@@ -48,28 +50,30 @@ async def candidates_create(
     candidate: CandidateCreate,
     session: AsyncSession = Depends(get_session_yield),
     user: None = Depends(is_auth_user),
-) -> CandidateCreate:
+) -> CandidateRead:
     candidate = Candidate(
         name=candidate.name,
         surname=candidate.surname,
-        patronymic=candidate.patronymic,
+        gender=candidate.gender,
     )
     session.add(candidate)
     await session.commit()
 
-    return CandidateCreate.model_validate(candidate, from_attributes=True)
+    return CandidateRead.model_validate(candidate, from_attributes=True)
 
 
 @router.put("/candidates/", status_code=status.HTTP_200_OK)
 async def candidates_update(
-    candidate: CandidateUpdate,
+    candidate_id: int = Form(...),
+    name: Optional[str] = Form(None),
+    surname: Optional[str] = Form(None),
+    gender: Optional[bool] = Form(None),
+    image: Optional[UploadFile] = Form(None),
+    votes: Optional[int] = Form(None),
     session: AsyncSession = Depends(get_session_yield),
     user: None = Depends(is_auth_user),
 ) -> CandidateRead:
-    candidate_dump = candidate.model_dump()
-    del candidate_dump["id"]
-
-    query = sa.select(Candidate).where(Candidate.id == candidate.id)
+    query = sa.select(Candidate).where(Candidate.id == candidate_id)
     candidate = await session.scalar(query)
 
     if candidate is None:
@@ -78,9 +82,15 @@ async def candidates_update(
             detail="Candidate not found",
         )
 
-    for k, v in candidate_dump.items():
-        if v and k != "id":
-            setattr(candidate, k, v)
+    candidate.name = name
+    candidate.surname = surname
+    candidate.gender = gender
+    candidate.votes = votes or 0
+
+    if image:
+        filename = save_image(image, candidate_id)
+        candidate.image = filename
+
     await session.commit()
 
     return CandidateRead.model_validate(candidate, from_attributes=True)
