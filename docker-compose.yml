@@ -11,10 +11,21 @@ services:
       - "${BACKEND_PORT}:${BACKEND_PORT}"
     volumes:
       - "upml-elections-volume:/app/db"
+      - "upml-elections-volume:/app/images"
     env_file: .env
     environment:
       PYTHONUNBUFFERED: 1
       PYTHONDONTWRITEBYTECODE: 1
+      DB_PATH: /app/db/database.sqlite
+
+  frontend:
+    image: "upml-elections-frontend-image"
+    container_name: "upml-elections-frontend"
+    build:
+      context: .
+      dockerfile: ./frontend/Dockerfile
+    ports:
+      - "${FRONTEND_PORT}:4000"
 
 volumes:
   upml-elections-volume:

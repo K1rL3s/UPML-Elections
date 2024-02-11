@@ -5,7 +5,11 @@ from fastapi import FastAPI
 from starlette.middleware.cors import CORSMiddleware
 from starlette.staticfiles import StaticFiles
 
-from backend.database import database_init, get_session_yield, init_result
+from backend.database import (
+    database_init,
+    init_result,
+    manager_get_session,
+)
 from backend.routes import include_routers
 from backend.settings import get_settings
 
@@ -15,9 +19,8 @@ async def lifespan(app: FastAPI):
     settings = get_settings()
     await database_init(settings)
 
-    it = get_session_yield()
-    session = await it.__anext__()
-    await init_result(session)
+    async with manager_get_session() as session:
+        await init_result(session)
 
     yield
 

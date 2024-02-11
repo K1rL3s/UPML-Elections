@@ -6,7 +6,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from starlette import status
 from starlette.requests import Request
 
-from backend.database.db_session import get_session_yield
+from backend.database.db_session import get_session
 from backend.database.models import Candidate, Result
 from backend.schemas.candidate import CandidateCreate, CandidateRead
 from backend.utils.auth import authed_user, is_auth_user
@@ -18,7 +18,7 @@ router = APIRouter(tags=["Candidates"])
 @router.get("/candidates", status_code=status.HTTP_200_OK)
 async def candidates_get_all(
     request: Request,
-    session: AsyncSession = Depends(get_session_yield),
+    session: AsyncSession = Depends(get_session),
 ) -> list[CandidateRead]:
     query = sa.select(Candidate).order_by(Candidate.id)
 
@@ -41,7 +41,7 @@ async def candidates_get_all(
 async def candidates_get_one(
     request: Request,
     candidate_id: int,
-    session: AsyncSession = Depends(get_session_yield),
+    session: AsyncSession = Depends(get_session),
 ) -> CandidateRead:
     query = sa.select(Candidate).where(Candidate.id == candidate_id)
     candidate_db = await session.scalar(query)
@@ -65,7 +65,7 @@ async def candidates_get_one(
 @router.post("/candidates", status_code=status.HTTP_201_CREATED)
 async def candidates_create(
     candidate: CandidateCreate,
-    session: AsyncSession = Depends(get_session_yield),
+    session: AsyncSession = Depends(get_session),
     user: None = Depends(authed_user),
 ) -> CandidateRead:
     candidate = Candidate(
@@ -87,7 +87,7 @@ async def candidates_update(
     gender: Optional[bool] = Form(None),
     image: Optional[UploadFile] = Form(None),
     votes: Optional[int] = Form(None),
-    session: AsyncSession = Depends(get_session_yield),
+    session: AsyncSession = Depends(get_session),
     user: None = Depends(authed_user),
 ) -> CandidateRead:
     query = sa.select(Candidate).where(Candidate.id == candidate_id)
@@ -105,8 +105,7 @@ async def candidates_update(
     candidate.votes = votes or 0
 
     if image:
-        filename = save_image(image, candidate_id)
-        candidate.image = filename
+        candidate.image = save_image(image)
 
     await session.commit()
 
@@ -116,7 +115,7 @@ async def candidates_update(
 @router.delete("/candidates/{candidate_id}", status_code=status.HTTP_204_NO_CONTENT)
 async def candidates_delete(
     candidate_id: int,
-    session: AsyncSession = Depends(get_session_yield),
+    session: AsyncSession = Depends(get_session),
     user: None = Depends(authed_user),
 ) -> None:
     query = sa.select(Candidate).where(Candidate.id == candidate_id)

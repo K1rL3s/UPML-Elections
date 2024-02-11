@@ -44,4 +44,6 @@ npm install -g @vue/cli
 npm install -g @quasar/cli
 npm install -g @vue/cli-init
 quasar dev
+quasar build --mode pwa
+quasar serve dist/pwa
 ```

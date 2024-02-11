@@ -1,8 +1,8 @@
-from typing import AsyncIterator
+from contextlib import asynccontextmanager
+from typing import AsyncGenerator, AsyncIterator
 
 import sqlalchemy as sa
-from sqlalchemy.ext.asyncio import (AsyncSession, async_sessionmaker,
-                                    create_async_engine)
+from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_async_engine
 
 from backend.database.models import Result
 from backend.database.models.base import AlchemyBaseModel
@@ -35,7 +35,7 @@ async def init_result(session: AsyncSession) -> None:
         await session.commit()
 
 
-async def get_session_yield() -> AsyncIterator[AsyncSession]:
+async def get_session() -> AsyncIterator[AsyncSession]:
     if not __factory:
         raise RuntimeError("Брат, а кто database_init вызывать будет?")
 
@@ -43,9 +43,10 @@ async def get_session_yield() -> AsyncIterator[AsyncSession]:
         yield session
 
 
-async def get_session_return() -> AsyncSession:
+@asynccontextmanager
+async def manager_get_session() -> AsyncGenerator[AsyncSession, None]:
     if not __factory:
         raise RuntimeError("Брат, а кто database_init вызывать будет?")
 
     async with __factory() as session:
-        return session
+        yield session

@@ -5,7 +5,7 @@ from fastapi import APIRouter, Depends
 from sqlalchemy.ext.asyncio import AsyncSession
 from starlette import status
 
-from backend.database.db_session import get_session_yield
+from backend.database.db_session import get_session
 from backend.database.models import Candidate, Result
 from backend.schemas import ResultRead, ResultUpdate
 from backend.utils.auth import authed_user
@@ -14,7 +14,7 @@ router = APIRouter()
 
 
 @router.get("/result", status_code=status.HTTP_200_OK)
-async def is_end(session: AsyncSession = Depends(get_session_yield)) -> ResultRead:
+async def is_end(session: AsyncSession = Depends(get_session)) -> ResultRead:
     result = await session.scalar(sa.select(Result))
     return ResultRead.model_validate(result, from_attributes=True)
 
@@ -22,7 +22,7 @@ async def is_end(session: AsyncSession = Depends(get_session_yield)) -> ResultRe
 @router.put("/result", status_code=status.HTTP_200_OK)
 async def end_toggle(
     result_update: ResultUpdate,
-    session: AsyncSession = Depends(get_session_yield),
+    session: AsyncSession = Depends(get_session),
     user: None = Depends(authed_user),
 ) -> ResultRead:
     result = await session.scalar(sa.select(Result))
@@ -48,7 +48,7 @@ async def end_toggle(
 
 @router.get("/percentage", status_code=status.HTTP_200_OK)
 async def percentage(
-    session: AsyncSession = Depends(get_session_yield),
+    session: AsyncSession = Depends(get_session),
 ) -> Optional[list[tuple[int, float]]]:
     query = sa.select(Candidate).order_by(Candidate.id)
     candidates = list(await session.scalars(query))
@@ -62,7 +62,7 @@ async def percentage(
 
 @router.get("/votes", status_code=status.HTTP_200_OK)
 async def votes_count(
-    session: AsyncSession = Depends(get_session_yield),
-) -> Optional[int]:
+    session: AsyncSession = Depends(get_session),
+) -> int:
     query = sa.select(sa.func.sum(Candidate.votes))
-    return await session.scalar(query)
+    return await session.scalar(query) or 0

@@ -6,7 +6,7 @@ from starlette import status
 from starlette.requests import Request
 from starlette.responses import JSONResponse
 
-from backend.database import get_session_yield
+from backend.database import get_session
 from backend.database.models import AuthToken
 from backend.schemas import AuthSchema
 from backend.settings import get_settings
@@ -22,7 +22,7 @@ async def login_check(request: Request) -> None:
 
 @router.post("/login", status_code=status.HTTP_200_OK)
 async def login(
-    auth: AuthSchema, session: AsyncSession = Depends(get_session_yield)
+    auth: AuthSchema, session: AsyncSession = Depends(get_session)
 ) -> JSONResponse:
     settings = get_settings()
     if auth.login != settings.login or auth.password != settings.password:

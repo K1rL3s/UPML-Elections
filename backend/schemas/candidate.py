@@ -9,7 +9,7 @@ class CandidateCreate(BaseSchema):
     name: Optional[str] = Field(default=None, max_length=32)
     surname: Optional[str] = Field(default=None, max_length=32)
     gender: Optional[bool] = Field(default=True)
-    image: Optional[str] = Field(default=None, max_length=32)
+    image: Optional[str] = Field(default=None, max_length=64)
     votes: Optional[int] = Field(default=0)
 
 
@@ -18,5 +18,5 @@ class CandidateRead(BaseSchema):
     name: Optional[str] = Field(max_length=32)
     surname: Optional[str] = Field(max_length=32)
     gender: Optional[bool] = Field(default=True)
-    image: Optional[str] = Field(max_length=32)
+    image: Optional[str] = Field(max_length=64)
     votes: Optional[int] = Field(default=0)
