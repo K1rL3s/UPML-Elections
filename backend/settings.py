@@ -1,9 +1,7 @@
 import os
-from typing import Optional
 
 from dotenv import load_dotenv
 from pydantic import BaseModel
-
 
 load_dotenv()
 
@@ -17,8 +15,8 @@ class Settings(BaseModel):
 
 def get_settings() -> Settings:
     return Settings(
-        port=int(os.environ["BACKEND_PORT"]),
-        db_path=os.environ["DB_PATH"],
+        port=int(os.getenv("BACKEND_PORT", 8000)),
+        db_path=os.getenv("DB_PATH", "./database.sqlite"),
         login=os.getenv("LOGIN", "login"),
-        password=os.getenv("PASSWORD", "password")
+        password=os.getenv("PASSWORD", "password"),
     )

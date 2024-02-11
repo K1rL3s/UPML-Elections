@@ -1,7 +1,7 @@
 <template>
   <div
     class="candidate-wrapper flex column justify-center items-center"
-    v-if="!(candidate.name.includes('Против') && role === 2)"
+    v-if="!(candidate.name.includes('Служебный кандидат'))"
   >
     <div class="candidate shadow-10 flex column justify-center items-center">
       <div class="image-wrapper flex column justify-center">
@@ -13,14 +13,6 @@
       <h4 class="q-my-sm">{{ candidate.name + " " + candidate.surname }}</h4>
       <div class="color-line" :style="{ 'background-color': color }" />
     </div>
-    <q-btn
-      :style="{ 'background-color': color }"
-      class="q-mt-md"
-      v-if="sessionId && !isVoted && role !== 2"
-      @click="vote"
-    >
-      Проголосовать
-    </q-btn>
   </div>
 </template>
 
@@ -37,8 +29,7 @@ export default {
         name: "Voloďa",
         surname: "Simkin",
         image: "http://www.rosphoto.com/images/u/articles/1510/4_8.jpg",
-        offlineVotes: 10000,
-        onlineVotes: 10000,
+        votes: 10000,
       },
     },
     color: { default: "red" },
@@ -49,7 +40,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters("mainStore", ["sessionId", "isVoted", "role"]),
+    ...mapGetters("mainStore", ["sessionId"]),
   },
 };
 </script>

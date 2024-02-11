@@ -3,15 +3,11 @@
     <header class="q-my-lg">
       <div
         class="limiter flex items-center"
-        :class="{
-          'justify-between': role !== 2,
-          'justify-center': role === 2,
-        }"
+        :class="{'justify-center': true}"
       >
-        <Logo :style="{ 'font-size': role === 2 ? '2.5vw' : '' }">
+        <Logo :style="{ 'font-size': '2.5vw'}">
           Выборы президента ЮФМЛ
         </Logo>
-        <HeaderNavigation v-if="role !== 2" />
       </div>
     </header>
     <section class="candidates-wrapper limiter flex column justify-center">
@@ -35,22 +31,30 @@
       }}
       с победой!
     </h2>
+
     <div class="limiter q-my-md">
       <section
         class="votes flex column justify-center q-px-md"
-        v-if="isVoted || isVoteDisplayShown"
+        v-if="isShowVotes"
       >
-        <VotesDisplay :colors="candidatesColors" :candidates="candidates" />
+        <PercentageDisplay :colors="candidatesColors" :candidates="candidates" :key="reRenderKey" />
       </section>
+
+      <div
+        class="votes flex column justify-center q-px-md"
+        v-else
+      >
+        <VotesDisplay :colors="candidatesColors" :key="reRenderKey" />
+      </div>
     </div>
   </q-layout>
 </template>
 
 <script>
 import Logo from "components/Logo";
-import HeaderNavigation from "components/HeaderNavigation";
 import Candidate from "components/Candidate";
 import VotesDisplay from "components/VotesDisplay";
+import PercentageDisplay from "components/PercentageDisplay";
 import axios from "axios";
 import { mapGetters } from "vuex";
 import constants from "src/js/constants";
@@ -74,37 +78,43 @@ export default {
   username: "IndexLayout",
   components: {
     Logo,
-    HeaderNavigation,
     Candidate,
+    PercentageDisplay,
     VotesDisplay,
   },
   mounted() {
-    setInterval(() => {
-      document.location.reload();
-    }, 2000 * 60);
-    axios.get(constants.serverIp + "candidates/").then((req) => {
-      this.candidates = req.data;
-    });
-    axios.get(constants.serverIp + "end/").then((req) => {
+    axios.get(constants.serverIp + "result").then((req) => {
+      this.isEnded = req.data.is_end;
+      this.isVoteDisplayChecked = req.data.is_show_votes;
+      this.isShowVotes = req.data.is_show_votes;
       this.winnerName = req.data.winner_name;
       this.winnerSurname = req.data.winner_surname;
       this.winnerGender = req.data.winner_gender;
     });
+    axios.get(constants.serverIp + "candidates").then((req) => {
+      this.candidates = req.data;
+    });
+
+    setInterval(() => {this.reRender()}, 60 * 1000);
   },
+
   data() {
     return {
       candidates: null,
-      // candidatesColors: null,
       width: null,
-      winnerName: "",
-      // role: null,
+      isEnded: false,
+      isShowVotes: false,
+      isVoteDisplayChecked: false,
+      winnerName: null,
+      reRenderKey: 0
     };
   },
   methods: {
-    // ...mapGetters('mainStore', ['sessionId']),
+    reRender() {this.reRenderKey += 1},
+
     generateCandidatesColors(count) {
       let colors = [];
-      let candidatesCount = count;
+      let candidatesCount = count + 1;
       for (let hue = 0; hue < candidatesCount; hue++) {
         colors.push(hsbToHex((hue * 360) / candidatesCount, 72, 51));
       }
@@ -122,13 +132,7 @@ export default {
     },
   },
   computed: {
-    ...mapGetters("mainStore", [
-      "sessionId",
-      "isVoted",
-      "isVoteDisplayShown",
-      "isNameShown",
-      "role",
-    ]),
+    ...mapGetters("mainStore", ["sessionId"]),
     candidatesColors() {
       if (this.candidates) {
         return this.generateCandidatesColors(

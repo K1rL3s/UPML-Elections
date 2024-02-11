@@ -2,7 +2,6 @@ from pathlib import Path
 
 from fastapi import UploadFile
 
-
 IMAGES_DIR = (Path(__file__).parent.parent / "images").resolve()
 
 

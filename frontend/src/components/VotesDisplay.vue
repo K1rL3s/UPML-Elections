@@ -1,18 +1,14 @@
 <template>
   <div
+    v-if="candidatesVotes"
     class="votes-display"
-    :style="{
-      'grid-template-columns': `repeat(${columnsTemplate})`,
-      'grid-template-rows': `repeat(${rowsTemplate})`,
-    }"
+    :style="{'grid-template-rows': '1, auto'}"
   >
     <div
       class="candidate-bar-part flex items-center justify-center text-center"
-      v-for="id in candidatesCount"
-      :key="id"
-      :style="{ 'background-color': this.colors[id - 1] }"
+      :style="{ 'background-color': this.colors.at(-1) }"
     >
-      {{ this.candidatesPercentage[id - 1][1].toFixed(1) + "%" }}
+      {{ this.candidatesVotes }} голосов
     </div>
   </div>
 </template>
@@ -27,73 +23,29 @@ export default {
     colors: {
       required: true,
     },
-    candidates: {
-      required: true,
-    },
   },
+
   mounted() {
+    this.getVotes();
     this.$nextTick(() => {
       window.addEventListener("resize", this.onResize);
     });
-    axios.get(constants.serverIp + "percentage/").then((req) => {
-      this.candidatesPercentage = req.data;
-    });
   },
+
   data() {
     return {
       windowWidth: window.innerWidth,
-      candidatesPercentage: null,
+      candidatesVotes: null,
     };
   },
   methods: {
     onResize() {
       this.windowWidth = window.innerWidth;
     },
-  },
-  computed: {
-    candidatesCount() {
-      if (this.candidates) {
-        return Object.keys(this.candidates).length;
-      }
-      return 0;
-    },
-    // candidatesPercentage() {
-    //   if (this.candidates) {
-    //     for (let candidate of this.candidates) {
-    //       let candidateVotesCount = candidate.onlineVotes + candidate.offlineVotes
-    //       // console.log(candidate)
-    //     }
-    //     return Object.values(this.candidates).map((object) => object.percentage)
-    //   }
-    //   return []
-    // },
-    gridSettings() {
-      if (this.candidatesPercentage) {
-        let settings = `${this.candidatesCount},`;
-        console.log(this.candidatesPercentage);
-        return (
-          settings +
-          this.candidatesPercentage
-            .map((el) => {
-              return el[1];
-            })
-            .join("% ") +
-          "%"
-        );
-      }
-      return null;
-    },
-    rowsTemplate() {
-      if (this.windowWidth < 768) {
-        return this.gridSettings;
-      }
-      return "1, auto";
-    },
-    columnsTemplate() {
-      if (this.windowWidth < 768) {
-        return "1, auto";
-      }
-      return this.gridSettings;
+    getVotes() {
+      axios.get(constants.serverIp + "votes").then((req) => {
+        this.candidatesVotes = req.data;
+      });
     },
   },
   beforeUnmount() {

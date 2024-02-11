@@ -29,7 +29,7 @@ export default {
 
       axios
         .post(
-          constants.serverIp + "images/",
+          constants.serverIp + "images",
 
           formData,
           {

@@ -162,6 +162,8 @@ cython_debug/
 *.sqlite
 .ruff_cache
 
+backend/images/*.jpg
+backend/images/*.png
 
 .DS_Store
 .thumbs.db

@@ -140,39 +140,34 @@ module.exports = configure(function (ctx) {
       },
 
       manifest: {
-        name: `UPML Elections`,
-        short_name: `UPML Elections`,
-        description: `Elections site for UMPL`,
+        name: `Выборы президента ЮФМЛ`,
+        short_name: `Выборы ЮФМЛ`,
+        description: `Сайт выборов президента ЮФМЛ`,
         display: "standalone",
         orientation: "portrait",
         background_color: "#ffffff",
         theme_color: "#027be3",
         icons: [
           {
-            src: "icons/icon-128x128.png",
+            src: "static/icons/icon-128x128.png",
             sizes: "128x128",
             type: "image/png",
           },
           {
-            src: "icons/icon-192x192.png",
-            sizes: "192x192",
+            src: "static/icons/icon-96x96.png",
+            sizes: "96x96",
             type: "image/png",
           },
           {
-            src: "icons/icon-256x256.png",
-            sizes: "256x256",
+            src: "static/icons/icon-32x32.png",
+            sizes: "32x32",
             type: "image/png",
           },
           {
-            src: "icons/icon-384x384.png",
+            src: "static/icons/icon-16x16.png",
             sizes: "384x384",
             type: "image/png",
-          },
-          {
-            src: "icons/icon-512x512.png",
-            sizes: "512x512",
-            type: "image/png",
-          },
+          }
         ],
       },
     },

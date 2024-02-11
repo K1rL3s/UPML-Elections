@@ -2,7 +2,7 @@
   <q-layout>
     <div
       class="limiter flex column justify-center items-center"
-      v-if="role !== 0"
+      v-if="hasAccess"
     >
       <h3>Создать кандидата</h3>
       <q-btn color="primary" @click="addCandidate">Добавить кандидата</q-btn>
@@ -16,13 +16,11 @@
           <q-input
             v-model="candidatesSettingsList[id].name"
             label="Имя кандидата"
-            :rules="[(val) => !!val || 'Поле обязательное']"
             @update:model-value="changeCandidateData(id)"
           />
           <q-input
             v-model="candidatesSettingsList[id].surname"
             label="Фамилия кандидата"
-            :rules="[(val) => !!val || 'Поле обязательное']"
             @update:model-value="changeCandidateData(id)"
           />
           <q-file
@@ -80,15 +78,24 @@
 import axios from "axios";
 import constants from "src/js/constants";
 import { mapGetters, mapMutations } from "vuex";
-import { toggleVoteDisplay } from "src/store/MainStore/mutations";
 
 export default {
   name: "Admin",
   mounted() {
-    this.isVoteDisplayChecked = this.isVoteDisplayShown;
-    this.isNameShowed = this.isNameShown;
+    axios.get(constants.serverIp + "login", {headers: {"Session-Id": this.sessionId}}).then((req) => {
+      this.hasAccess = true;
+    }).catch((req) => {
+      this.hasAccess = false;
+    });
+
+    axios.get(constants.serverIp + "result").then((req) => {
+      this.isEnded = req.data.is_end;
+      this.isVoteDisplayChecked = req.data.is_show_votes;
+      this.isShowVotes = req.data.is_show_votes;
+    });
+
     axios
-      .get(constants.serverIp + "candidates/")
+      .get(constants.serverIp + "candidates", {headers: {"Session-Id": this.sessionId}})
       .then((req) => {
         for (let i in req.data) {
           if (req.data[i].gender) {
@@ -103,29 +110,22 @@ export default {
       .catch((req) => {
         console.log(req);
       });
-    axios.get(constants.serverIp + "end/").then((req) => {
-      this.isEnded = req.data.is_end;
-    });
   },
+
   data() {
     return {
       candidatesCount: 0,
       candidatesSettingsList: [],
       isVoteDisplayChecked: null,
-      isNameShowed: null,
+      isShowVotes: false,
+      hasAccess: false,
       candidatesShow: [],
       isEnded: false,
       selectOptions: ["Мужской", "Женский"],
     };
   },
   methods: {
-    ...mapMutations("mainStore", [
-      "toggleVoteDisplay",
-      "toggleNameShow",
-      "changeCandidatesShown",
-      "changeWinnerName",
-      "toggleVoteDisplay",
-    ]),
+    ...mapMutations("mainStore", []),
     changeVotes(id, action) {
       if (action === "+") {
         this.candidatesSettingsList[id].votes++;
@@ -134,6 +134,7 @@ export default {
       }
       this.changeCandidateData(id);
     },
+
     addCandidate() {
       axios
         .post(
@@ -156,11 +157,24 @@ export default {
           });
         });
     },
+
     toggleEnd() {
+      this.isEnded = !this.isEnded;
+      this.updateResult();
+    },
+    toggleShowVotes() {
+      this.isVoteDisplayChecked = !this.isVoteDisplayChecked;
+      this.updateResult();
+    },
+
+    updateResult() {
       axios
-        .post(
-          constants.serverIp + "end",
-          {},
+        .put(
+          constants.serverIp + "result",
+          {
+            "is_end": this.isEnded,
+            "is_show_votes": this.isVoteDisplayChecked
+          },
           {
             headers: {
               "Session-Id": this.sessionId,
@@ -169,13 +183,10 @@ export default {
         )
         .then((req) => {
           this.isEnded = req.data.is_end;
-          this.changeWinnerName(req.data.winner_name);
+          this.isShowVotes = req.data.is_show_votes;
+          this.isVoteDisplayChecked = req.data.is_show_votes;
           console.log(req.data);
         });
-    },
-    toggleShowVotes() {
-      this.isVoteDisplayChecked = !this.isVoteDisplayChecked;
-      this.toggleVoteDisplay();
     },
     deleteCandidate(id) {
       axios.delete(
@@ -206,7 +217,7 @@ export default {
       }
       if (this.candidatesSettingsList[id].votes) formData.append("votes", this.candidatesSettingsList[id].votes);
       axios
-        .put(constants.serverIp + "candidates/", formData, {
+        .put(constants.serverIp + "candidates", formData, {
           headers: {
             "Session-Id": this.sessionId,
             "Content-Type": "application/json",
@@ -220,9 +231,6 @@ export default {
   computed: {
     ...mapGetters("mainStore", [
       "sessionId",
-      "isVoteDisplayShown",
-      "isNameShown",
-      "role",
     ]),
   },
 };

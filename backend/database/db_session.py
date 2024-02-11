@@ -46,6 +46,6 @@ async def get_session_yield() -> AsyncIterator[AsyncSession]:
 async def get_session_return() -> AsyncSession:
     if not __factory:
         raise RuntimeError("Брат, а кто database_init вызывать будет?")
-    
+
     async with __factory() as session:
         return session

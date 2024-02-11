@@ -68,13 +68,16 @@ export default {
     };
   },
   methods: {
-    ...mapMutations("mainStore", ["login", "changeRole"]),
+    ...mapMutations("mainStore", ["login"]),
     onSubmit() {
       axios
-        .post(constants.serverIp + "login/", {
+        .post(constants.serverIp + "login", {
           login: this.username,
           password: this.password,
-        }, {headers: {"Session-Id": this.sessionId}})
+        },
+        {
+          headers: {"Session-Id": this.sessionId}
+        })
         .then((req) => {
           let sessionId = req.data.session_id;
           this.login(sessionId)

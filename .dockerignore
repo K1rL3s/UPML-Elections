@@ -34,15 +34,14 @@ Dockerfile
 README.md
 docker-compose.yml
 
-.DS_Store
-.thumbs.db
-node_modules
-.quasar
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-.idea
-*.suo
-*.ntvs*
-*.njsproj
-*.sln
+**/dist
+**/.thumbs.db
+**/node_modules
+**/.quasar
+**/npm-debug.log*
+**/yarn-debug.log*
+**/yarn-error.log*
+**/*.suo
+**/*.ntvs*
+**/*.njsproj
+**/*.sln

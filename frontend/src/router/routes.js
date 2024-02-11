@@ -18,7 +18,7 @@ const routes = [
     children: [{ path: "", component: () => import("pages/AdminPanel.vue") }],
   },
   {
-    path: "/image",
+    path: "/images",
     component: () => import("layouts/ImageLayout.vue"),
     children: [{ path: "", component: () => import("pages/AdminPanel.vue") }],
   },

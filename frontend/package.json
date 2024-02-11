@@ -1,8 +1,8 @@
 {
   "name": "upml_elections",
   "version": "0.0.1",
-  "description": "Elections site for UMPL",
-  "productName": "UPML Elections",
+  "description": "Сайт выборов президента ЮФМЛ",
+  "productName": "Выборы ЮФМЛ",
   "author": "y",
   "private": true,
   "scripts": {
@@ -19,6 +19,8 @@
     "petrovich-js": "^0.1.1",
     "push-dir": "^0.4.1",
     "quasar": "^2.0.0",
+    "run": "^1.5.0",
+    "start": "^5.1.0",
     "vue": "^3.0.0",
     "vue-router": "^4.0.0",
     "vuex": "^4.0.1",

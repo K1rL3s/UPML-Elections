@@ -18,6 +18,7 @@ class Result(AlchemyBaseModel):
     )
 
     is_end: Mapped[bool] = mapped_column(Boolean, nullable=False, default=False)
+    is_show_votes: Mapped[bool] = mapped_column(Boolean, nullable=False, default=False)
     winner_name: Mapped[Optional[str]] = mapped_column(
         String(32),
         default=None,
