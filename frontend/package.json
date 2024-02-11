@@ -20,13 +20,12 @@
     "push-dir": "^0.4.1",
     "quasar": "^2.0.0",
     "run": "^1.5.0",
+    "sass": "^1.33.0",
     "start": "^5.1.0",
     "vue": "^3.0.0",
     "vue-router": "^4.0.0",
     "vuex": "^4.0.1",
-    "vuex-persistedstate": "^4.1.0",
-    "workbox-webpack-plugin": "^6.4.2",
-    "sass": "^1.33.0"
+    "vuex-persistedstate": "^4.1.0"
   },
   "devDependencies": {
     "@babel/eslint-parser": "^7.13.14",
@@ -36,7 +35,8 @@
     "eslint-plugin-vue": "^7.0.0",
     "eslint-webpack-plugin": "^2.4.0",
     "prettier": "^2.5.1",
-    "strip-ansi": "^3.0.1"
+    "strip-ansi": "^3.0.1",
+    "workbox-webpack-plugin": "^6.6.0"
   },
   "browserslist": [
     "last 10 Chrome versions",
