@@ -2,7 +2,11 @@ from contextlib import asynccontextmanager
 from typing import AsyncGenerator, AsyncIterator
 
 import sqlalchemy as sa
-from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_async_engine
+from sqlalchemy.ext.asyncio import (
+    AsyncSession,
+    async_sessionmaker,
+    create_async_engine,
+)
 
 from backend.database.models import Result
 from backend.database.models.base import AlchemyBaseModel

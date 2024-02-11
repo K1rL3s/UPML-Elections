@@ -5,11 +5,7 @@ from fastapi import FastAPI
 from starlette.middleware.cors import CORSMiddleware
 from starlette.staticfiles import StaticFiles
 
-from backend.database import (
-    database_init,
-    init_result,
-    manager_get_session,
-)
+from backend.database import database_init, init_result, manager_get_session
 from backend.routes import include_routers
 from backend.settings import get_settings
 
