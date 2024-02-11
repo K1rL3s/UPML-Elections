@@ -45,3 +45,4 @@ docker-compose.yml
 **/*.ntvs*
 **/*.njsproj
 **/*.sln
+**/src-pwa
