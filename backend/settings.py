@@ -16,7 +16,7 @@ class Settings(BaseModel):
 def get_settings() -> Settings:
     return Settings(
         port=int(os.getenv("BACKEND_PORT", 8000)),
-        db_path=os.getenv("DB_PATH", "./database.sqlite"),
+        db_path="./db/database.sqlite",
         login=os.getenv("LOGIN", "login"),
         password=os.getenv("PASSWORD", "password"),
     )

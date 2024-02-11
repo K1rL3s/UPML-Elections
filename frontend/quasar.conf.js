@@ -167,7 +167,7 @@ module.exports = configure(function (ctx) {
             src: "static/icons/icon-16x16.png",
             sizes: "384x384",
             type: "image/png",
-          }
+          },
         ],
       },
     },

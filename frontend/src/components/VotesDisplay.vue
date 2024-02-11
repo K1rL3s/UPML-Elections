@@ -2,7 +2,7 @@
   <div
     v-if="candidatesVotes"
     class="votes-display"
-    :style="{'grid-template-rows': '1, auto'}"
+    :style="{ 'grid-template-rows': '1, auto' }"
   >
     <div
       class="candidate-bar-part flex items-center justify-center text-center"

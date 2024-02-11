@@ -3,11 +3,9 @@
     <header class="q-my-lg">
       <div
         class="limiter flex items-center"
-        :class="{'justify-center': true}"
+        :class="{ 'justify-center': true }"
       >
-        <Logo :style="{ 'font-size': '2.5vw'}">
-          Выборы президента ЮФМЛ
-        </Logo>
+        <Logo :style="{ 'font-size': '2.5vw' }"> Выборы президента ЮФМЛ </Logo>
       </div>
     </header>
     <section class="candidates-wrapper limiter flex column justify-center">
@@ -37,13 +35,14 @@
         class="votes flex column justify-center q-px-md"
         v-if="isShowVotes"
       >
-        <PercentageDisplay :colors="candidatesColors" :candidates="candidates" :key="reRenderKey" />
+        <PercentageDisplay
+          :colors="candidatesColors"
+          :candidates="candidates"
+          :key="reRenderKey"
+        />
       </section>
 
-      <div
-        class="votes flex column justify-center q-px-md"
-        v-else
-      >
+      <div class="votes flex column justify-center q-px-md" v-else>
         <VotesDisplay :colors="candidatesColors" :key="reRenderKey" />
       </div>
     </div>
@@ -95,7 +94,9 @@ export default {
       this.candidates = req.data;
     });
 
-    setInterval(() => {this.reRender()}, 60 * 1000);
+    setInterval(() => {
+      this.reRender();
+    }, 60 * 1000);
   },
 
   data() {
@@ -106,11 +107,13 @@ export default {
       isShowVotes: false,
       isVoteDisplayChecked: false,
       winnerName: null,
-      reRenderKey: 0
+      reRenderKey: 0,
     };
   },
   methods: {
-    reRender() {this.reRenderKey += 1},
+    reRender() {
+      this.reRenderKey += 1;
+    },
 
     generateCandidatesColors(count) {
       let colors = [];

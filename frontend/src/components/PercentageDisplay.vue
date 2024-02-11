@@ -64,7 +64,9 @@ export default {
       return 0;
     },
     gridSettings() {
-      if (!this.candidatesPercentage) {this.getPercentage()};
+      if (!this.candidatesPercentage) {
+        this.getPercentage();
+      }
       let settings = `${this.candidatesCount},`;
       return (
         settings +

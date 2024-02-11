@@ -5,8 +5,8 @@ services:
     image: "upml-elections-backend-image"
     container_name: "upml-elections-backend"
     build:
-      context: ./backend
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: ./backend/Dockerfile
     ports:
       - "${BACKEND_PORT}:${BACKEND_PORT}"
     volumes:

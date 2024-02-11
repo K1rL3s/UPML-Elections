@@ -82,11 +82,16 @@ import { mapGetters, mapMutations } from "vuex";
 export default {
   name: "Admin",
   mounted() {
-    axios.get(constants.serverIp + "login", {headers: {"Session-Id": this.sessionId}}).then((req) => {
-      this.hasAccess = true;
-    }).catch((req) => {
-      this.hasAccess = false;
-    });
+    axios
+      .get(constants.serverIp + "login", {
+        headers: { "Session-Id": this.sessionId },
+      })
+      .then((req) => {
+        this.hasAccess = true;
+      })
+      .catch((req) => {
+        this.hasAccess = false;
+      });
 
     axios.get(constants.serverIp + "result").then((req) => {
       this.isEnded = req.data.is_end;
@@ -95,7 +100,9 @@ export default {
     });
 
     axios
-      .get(constants.serverIp + "candidates", {headers: {"Session-Id": this.sessionId}})
+      .get(constants.serverIp + "candidates", {
+        headers: { "Session-Id": this.sessionId },
+      })
       .then((req) => {
         for (let i in req.data) {
           if (req.data[i].gender) {
@@ -172,8 +179,8 @@ export default {
         .put(
           constants.serverIp + "result",
           {
-            "is_end": this.isEnded,
-            "is_show_votes": this.isVoteDisplayChecked
+            is_end: this.isEnded,
+            is_show_votes: this.isVoteDisplayChecked,
           },
           {
             headers: {
@@ -189,33 +196,46 @@ export default {
         });
     },
     deleteCandidate(id) {
-      axios.delete(
-        constants.serverIp + "candidates/" + this.candidatesSettingsList[id].id,
-        {
-          headers: {
-            "Session-Id": this.sessionId,
-          },
-        }
-      )
-      .then((req) => {
-        this.candidatesSettingsList.splice(id, 1);
-      })
-      .catch((req) => {
-        console.log(123123);
-        console.log(req);
-      });
+      axios
+        .delete(
+          constants.serverIp +
+            "candidates/" +
+            this.candidatesSettingsList[id].id,
+          {
+            headers: {
+              "Session-Id": this.sessionId,
+            },
+          }
+        )
+        .then((req) => {
+          this.candidatesSettingsList.splice(id, 1);
+        })
+        .catch((req) => {
+          console.log(123123);
+          console.log(req);
+        });
     },
     changeCandidateData(id) {
       console.log(this.candidatesSettingsList);
       let formData = new FormData();
       formData.append("candidate_id", this.candidatesSettingsList[id].id);
-      if (this.candidatesSettingsList[id].name) formData.append("name", this.candidatesSettingsList[id].name);
-      if (this.candidatesSettingsList[id].surname) formData.append("surname", this.candidatesSettingsList[id].surname);
-      if (this.candidatesSettingsList[id].gender) formData.append("gender", this.candidatesSettingsList[id].gender === "Мужской" ? 1 : 0);
-      if (this.candidatesSettingsList[id].image && typeof this.candidatesSettingsList[id].image !== "string") {
+      if (this.candidatesSettingsList[id].name)
+        formData.append("name", this.candidatesSettingsList[id].name);
+      if (this.candidatesSettingsList[id].surname)
+        formData.append("surname", this.candidatesSettingsList[id].surname);
+      if (this.candidatesSettingsList[id].gender)
+        formData.append(
+          "gender",
+          this.candidatesSettingsList[id].gender === "Мужской" ? 1 : 0
+        );
+      if (
+        this.candidatesSettingsList[id].image &&
+        typeof this.candidatesSettingsList[id].image !== "string"
+      ) {
         formData.append("image", this.candidatesSettingsList[id].image);
       }
-      if (this.candidatesSettingsList[id].votes) formData.append("votes", this.candidatesSettingsList[id].votes);
+      if (this.candidatesSettingsList[id].votes)
+        formData.append("votes", this.candidatesSettingsList[id].votes);
       axios
         .put(constants.serverIp + "candidates", formData, {
           headers: {
@@ -229,9 +249,7 @@ export default {
     },
   },
   computed: {
-    ...mapGetters("mainStore", [
-      "sessionId",
-    ]),
+    ...mapGetters("mainStore", ["sessionId"]),
   },
 };
 </script>

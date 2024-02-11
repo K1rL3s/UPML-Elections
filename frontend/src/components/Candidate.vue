@@ -1,7 +1,7 @@
 <template>
   <div
     class="candidate-wrapper flex column justify-center items-center"
-    v-if="!(candidate.name.includes('Служебный кандидат'))"
+    v-if="!candidate.name.includes('Служебный кандидат')"
   >
     <div class="candidate shadow-10 flex column justify-center items-center">
       <div class="image-wrapper flex column justify-center">

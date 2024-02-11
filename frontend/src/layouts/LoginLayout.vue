@@ -13,9 +13,7 @@
           label="Логин"
           class="q-mb-md"
           lazy-rules
-          :rules="[
-            (val) => !!val || 'Это поле обязательное',
-          ]"
+          :rules="[(val) => !!val || 'Это поле обязательное']"
         />
         <q-input
           type="password"
@@ -71,17 +69,20 @@ export default {
     ...mapMutations("mainStore", ["login"]),
     onSubmit() {
       axios
-        .post(constants.serverIp + "login", {
-          login: this.username,
-          password: this.password,
-        },
-        {
-          headers: {"Session-Id": this.sessionId}
-        })
+        .post(
+          constants.serverIp + "login",
+          {
+            login: this.username,
+            password: this.password,
+          },
+          {
+            headers: { "Session-Id": this.sessionId },
+          }
+        )
         .then((req) => {
           let sessionId = req.data.session_id;
-          this.login(sessionId)
-          this.$router.push("/")
+          this.login(sessionId);
+          this.$router.push("/");
         })
         .catch((err) => {
           console.log(err);
