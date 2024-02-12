@@ -5,8 +5,7 @@ WORKDIR /app
 
 RUN npm install -g @quasar/cli && \
     npm install -g @vue/cli && \
-    npm install -g @vue/cli-init && \
-    npm i workbox-webpack-plugin
+    npm install -g @vue/cli-init
 
 COPY ./frontend/package*.json /app
 

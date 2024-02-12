@@ -22,12 +22,12 @@ a {
 }
 h2 {
   font-size: calc(40px + 0.2vw) !important;
-  font-weight: 400;
+  font-weight: 500;
 }
 
 h4 {
   font-size: 1.8vw !important;
-  font-weight: 500 !important;
+  font-weight: 600 !important;
 }
 h6 {
   font-size: 1.7vw !important;
@@ -37,4 +37,9 @@ h6 {
   h4 {
     font-size: 30px !important;
   }
+}
+
+body {
+  font-family: "rubik", roboto;
+  font-weight: bold;
 }
