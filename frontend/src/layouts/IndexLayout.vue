@@ -5,7 +5,7 @@
         class="limiter flex items-center"
         :class="{ 'justify-center': true }"
       >
-        <Logo :style="{ 'font-size': '2.5vw' }"> Выборы президента ЮФМЛ </Logo>
+        <Logo :style="{ 'font-size': 'max(2.5vw, 50px)' }"> Выборы президента ЮФМЛ </Logo>
       </div>
     </header>
     <section class="candidates-wrapper limiter flex column justify-center">
