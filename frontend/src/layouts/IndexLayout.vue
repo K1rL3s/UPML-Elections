@@ -5,7 +5,9 @@
         class="limiter flex items-center"
         :class="{ 'justify-center': true }"
       >
-        <Logo :style="{ 'font-size': 'max(2.5vw, 50px)' }"> Выборы президента ЮФМЛ </Logo>
+        <Logo :style="{ 'font-size': 'max(2.5vw, 50px)' }">
+          Выборы президента ЮФМЛ
+        </Logo>
       </div>
     </header>
     <section class="candidates-wrapper limiter flex column justify-center">
@@ -93,10 +95,11 @@ export default {
     axios.get(constants.serverIp + "candidates").then((req) => {
       this.candidates = req.data;
     });
-
-    setInterval(() => {
-      this.reRender();
-    }, 60 * 1000);
+    if (!this.isEnded) {
+      setInterval(() => {
+        this.reRender();
+      }, 120 * 1000);
+    }
   },
 
   data() {

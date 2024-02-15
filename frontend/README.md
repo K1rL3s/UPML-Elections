@@ -38,6 +38,7 @@ See [Configuring quasar.conf.js](https://quasar.dev/quasar-cli/quasar-conf-js).
 
 https://stackoverflow.com/questions/32426601/how-can-i-completely-uninstall-nodejs-npm-and-node-in-ubuntu
 https://www.freecodecamp.org/news/how-to-install-node-js-on-ubuntu/
+
 ```bash
 npm install
 npm install -g @vue/cli
