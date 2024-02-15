@@ -11,13 +11,15 @@
       class="candidate-bar-part flex items-center justify-center text-center"
       :style="{ 'background-color': 'rgb(0, 255, 0)' }"
     >
-      {{ this.candidatesVotes[0][1] + "%" }} ({{ this.candidatesVotes[0][0] }})
+      {{ this.candidatesVotes[0][0].toFixed(1) + "%" }}
+      ({{ this.candidatesVotes[0][1] }})
     </div>
     <div
       class="candidate-bar-part flex items-center justify-center text-center"
       :style="{ 'background-color': 'rgb(255, 0, 0)' }"
     >
-      {{ this.candidatesVotes[1][1] + "%" }} ({{ this.candidatesVotes[1][0] }})
+      {{ this.candidatesVotes[1][0].toFixed(1) + "%" }}
+      ({{ this.candidatesVotes[1][1] }})
     </div>
   </div>
 </template>
@@ -69,7 +71,7 @@ export default {
         settings +
         this.candidatesVotes
           .map((el) => {
-            return el[1];
+            return el[0];
           })
           .join("% ") +
         "%"

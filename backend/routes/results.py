@@ -10,6 +10,7 @@ from backend.database.models import Candidate, Result
 from backend.schemas import ResultRead, ResultUpdate
 from backend.settings import get_settings
 from backend.utils.auth import authed_user
+from backend.utils.percent import round_percents
 
 router = APIRouter()
 
@@ -58,18 +59,25 @@ async def percentage(
     voted = sum(c.votes for c in candidates)
 
     if result.is_end or result.is_show_votes:
-        return [(c.id, c.votes / voted * 100) for c in candidates] if voted else []
+        if not voted:
+            return []
+        percents = [c.votes / voted * 100 for c in candidates]
+        rounded_percents = round_percents(percents)
+        return [(c.id, rounded_percents[i]) for i, c in enumerate(candidates)]
 
 
 # Возвращает
-# (проголосовавшие, процент проголосовавших)
-# (все голоса минус проголосовавшие, 100 - процент проголосовавших)
+# (процент проголосовавших, проголосовавшие)
+# (100% - процент проголосовавших, все голоса минус проголосовавшие)
 @router.get("/votes", status_code=status.HTTP_200_OK)
 async def votes_count(
     session: AsyncSession = Depends(get_session),
-) -> tuple[tuple[int, float], tuple[int, float]]:
+) -> tuple[tuple[float, int], tuple[float, int]]:
     voted = await session.scalar(sa.select(sa.func.sum(Candidate.votes))) or 0
     all_votes = get_settings().all_votes
     voted_percent = voted / all_votes * 100
     unvoted_percent = 100 - voted_percent
-    return (voted, voted_percent), (all_votes - voted, unvoted_percent)
+
+    voted_percent, unvoted_percent = round_percents([voted_percent, unvoted_percent])
+
+    return (voted_percent, voted), (unvoted_percent, all_votes - voted)
