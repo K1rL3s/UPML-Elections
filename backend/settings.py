@@ -11,6 +11,7 @@ class Settings(BaseModel):
     db_path: str
     login: str
     password: str
+    all_votes: int
 
 
 def get_settings() -> Settings:
@@ -19,4 +20,5 @@ def get_settings() -> Settings:
         db_path=os.getenv("DB_PATH", "./db/database.sqlite"),
         login=os.getenv("LOGIN", "login"),
         password=os.getenv("PASSWORD", "password"),
+        all_votes=os.getenv("ALL_VOTES", 150),
     )

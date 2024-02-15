@@ -8,6 +8,7 @@ from starlette import status
 from backend.database.db_session import get_session
 from backend.database.models import Candidate, Result
 from backend.schemas import ResultRead, ResultUpdate
+from backend.settings import get_settings
 from backend.utils.auth import authed_user
 
 router = APIRouter()
@@ -60,9 +61,15 @@ async def percentage(
         return [(c.id, c.votes / voted * 100) for c in candidates] if voted else []
 
 
+# Возвращает
+# (проголосовавшие, процент проголосовавших)
+# (все голоса минус проголосовавшие, 100 - процент проголосовавших)
 @router.get("/votes", status_code=status.HTTP_200_OK)
 async def votes_count(
     session: AsyncSession = Depends(get_session),
-) -> int:
-    query = sa.select(sa.func.sum(Candidate.votes))
-    return await session.scalar(query) or 0
+) -> tuple[tuple[int, float], tuple[int, float]]:
+    voted = await session.scalar(sa.select(sa.func.sum(Candidate.votes))) or 0
+    all_votes = get_settings().all_votes
+    voted_percent = voted / all_votes * 100
+    unvoted_percent = 100 - voted_percent
+    return (voted, voted_percent), (all_votes - voted, unvoted_percent)
