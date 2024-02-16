@@ -120,7 +120,7 @@ export default {
 
     generateCandidatesColors(count) {
       let colors = [];
-      let candidatesCount = count + 1;
+      let candidatesCount = count + 2; // один на "против всех", ещё один на прогресс до показа распределения
       for (let hue = 0; hue < candidatesCount; hue++) {
         colors.push(hsbToHex((hue * 360) / candidatesCount, 72, 51));
       }

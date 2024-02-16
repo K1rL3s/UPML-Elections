@@ -9,14 +9,14 @@
   >
     <div
       class="candidate-bar-part flex items-center justify-center text-center"
-      :style="{ 'background-color': 'rgb(0, 255, 0)' }"
+      :style="{ 'background-color': this.colors.at(-2) }"
     >
       {{ this.candidatesVotes[0][0].toFixed(1) + "%" }}
       ({{ this.candidatesVotes[0][1] }})
     </div>
     <div
       class="candidate-bar-part flex items-center justify-center text-center"
-      :style="{ 'background-color': 'rgb(255, 0, 0)' }"
+      :style="{ 'background-color': this.colors.at(-1) }"
     >
       {{ this.candidatesVotes[1][0].toFixed(1) + "%" }}
       ({{ this.candidatesVotes[1][1] }})
