@@ -34,6 +34,10 @@
 
 ## Скриншоты
 
+![chrome_404IsrMHnB](https://github.com/K1rL3s/UPML-Elections/assets/104463209/ea725d14-0de6-472f-a2be-6e3cbf09df7a)
+
+![photo_2024-02-16_16-07-22](https://github.com/K1rL3s/UPML-Elections/assets/104463209/e53a1d55-12b5-45e0-b8b2-59e910eecc4f)
+
 
 
 
